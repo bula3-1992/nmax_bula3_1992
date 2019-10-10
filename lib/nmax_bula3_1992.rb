@@ -51,34 +51,48 @@ module NmaxBula31992
   def self.traverse(node)
     return if node.nil?
     traverse(node.left) if node.left
-    puts node.value.to_s
+    if !@n.nil? and @counter >= @n
+      return
+    else
+      puts node.value.join('')
+      @counter +=1
+    end
     traverse(node.right) if node.right
   end
 
-  result_array = []
-  current_chislo = []
-  root = nil
-  # Your code goes here...
-  chislo_flag = true #устанавливаем первоначальный флаг правда
-  while letter = $stdin.getc
-    if letter == ' ' #слово кончилось
-      if chislo_flag #все слово целиком состоит из цифр
-        if root.nil?
-          root = Node.new(current_chislo)
-        else
-          pushNode(root, current_chislo)
-        end
-      end #конец проверки слова
-      current_chislo.clear #очищаем текущее слово для нового
-      chislo_flag = true #переустанавливаем первоначальный флаг правда
-    elsif (chislo_flag == true) && %w[0 1 2 3 4 5 6 7 8 9].include?(letter) #буква является цифрой
-      current_chislo.push letter #сохраняем цифру в массив текущего слова, оно не может быть больше 1000 символов
-    else #не цифра снимаем флаг, больше это слово не проверяем
-      chislo_flag = false #ничего не делаем
-    end #конец проверки букв
-  end #конец входного потока
-  puts "Hello! I'm Ruby!"
+  unless $stdin.tty?
+    result_array = []
+    current_chislo = []
+    root = nil
+    @counter = 0
+    @n = ARGV[0] ? ARGV[0].to_i : nil
+    # Your code goes here...
+    chislo_flag = true #устанавливаем первоначальный флаг правда
+    while letter = $stdin.getc
+      if letter == ' ' #слово кончилось
+        if chislo_flag #все слово целиком состоит из цифр
+          if root.nil?
+            root = Node.new(current_chislo)
+          else
+            pushNode(root, current_chislo)
+          end
+        end #конец проверки слова
+        current_chislo.clear #очищаем текущее слово для нового
+        chislo_flag = true #переустанавливаем первоначальный флаг правда
+      elsif (chislo_flag == true) && %w[0 1 2 3 4 5 6 7 8 9].include?(letter) #буква является цифрой
+        current_chislo.push letter #сохраняем цифру в массив текущего слова, оно не может быть больше 1000 символов
+      else #не цифра снимаем флаг, больше это слово не проверяем
+        chislo_flag = false #ничего не делаем
+      end #конец проверки букв
+    end #конец входного потока
+    traverse(root)
+  end
 
-  traverse(root)
-  n = ARGV[0]
+  def self.set_counter
+    @counter = 0
+  end
+
+  def self.set_n(n)
+    @n = n
+  end
 end
